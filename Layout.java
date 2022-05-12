@@ -69,14 +69,14 @@ public class Layout extends Application{
 		shapeOptionsMenu.getItems().addAll("circle", "rectangle", "line"); 
 		shapeOptionsMenu.setPrefWidth(200); 
 		shapeOptionsMenu.setPrefWidth(200); 
-		
-		shapeOptionsMenu.setOnAction((event) -> {
-		    int selectedIndex = shapeOptionsMenu.getSelectionModel().getSelectedIndex();
-		    Object selectedItem = shapeOptionsMenu.getSelectionModel().getSelectedItem();
 
-		    shapeType = shapeOptionsMenu.getValue();
-		    shapeTypeSet = true;
-		});
+//		shapeOptionsMenu.setOnAction((event) -> {
+//		    int selectedIndex = shapeOptionsMenu.getSelectionModel().getSelectedIndex();
+//		    Object selectedItem = shapeOptionsMenu.getSelectionModel().getSelectedItem();
+//
+//		    shapeType = shapeOptionsMenu.getValue();
+//		    shapeTypeSet = true;
+//		});
         
 
 		toolbarPaneVBox.getChildren().add(shapeOptionsMenu);		
@@ -90,8 +90,11 @@ public class Layout extends Application{
 		VBox toolbarPaneLineVbox = new VBox();
 		
 		toolbarPaneHbox.getChildren().add(toolbarPaneCircleVbox);
+		toolbarPaneCircleVbox.setVisible(false);
 		toolbarPaneHbox.getChildren().add(toolbarPaneRectangleVbox);
+		toolbarPaneRectangleVbox.setVisible(false);
 		toolbarPaneHbox.getChildren().add(toolbarPaneLineVbox);
+		toolbarPaneLineVbox.setVisible(false);
 		
 		// UNDO BUTTON
 		Button undoButton = new Button("UNDO");
@@ -100,8 +103,8 @@ public class Layout extends Application{
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				System.out.println(root.getChildren());
-//				group.getChildren().remove(group.getChildren().size() - 2);
+				System.out.println(root.getChildren().size() - 1);
+				root.getChildren().remove(root.getChildren().size() - 1);
 //				System.out.print(arg0.get)
 			}
 		};
@@ -239,6 +242,59 @@ public class Layout extends Application{
 				}
 			}
 		});
+		
+		EventHandler<ActionEvent> shapeOptionsMenuChange = new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				if (shapeOptionsMenu.getValue() == "circle") {
+					shapeType = "circle";
+					shapeTypeSet = true;
+					toolbarPaneRectangleVbox.setVisible(false);
+					toolbarPaneLineVbox.setVisible(false);
+					toolbarPaneCircleVbox.setVisible(true);
+//					rectangleHeightInput.setVisible(false);
+//					rectangleWidthInput.setVisible(false);
+//					circleRadiusSlider.setVisible(true);
+////					submitInfo.setVisible(false);
+//					colorPicker.setVisible(true);
+					rectangleColorPicker.setVisible(false);
+				} else if (shapeOptionsMenu.getValue() == "rectangle") {
+					shapeType = "rectangle";
+					shapeTypeSet = true;
+					toolbarPaneCircleVbox.setVisible(false);
+					toolbarPaneLineVbox.setVisible(false);
+					toolbarPaneRectangleVbox.setVisible(true);
+//					rectangleHeightInput.setVisible(true);
+//					rectangleHeightInput.setText("Choose height");
+//					rectangleHeightInput.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 5));
+//					rectangleWidthInput.setText("Choose width");
+//					rectangleWidthInput.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 5));
+//					rectangleWidthInput.setVisible(true);
+////					submitInfo.setVisible(true);
+//					rectangleColorPicker.setVisible(true);
+
+				} else if (shapeOptionsMenu.getValue() == "line"){
+					shapeType = "line";
+					shapeTypeSet = true;
+					toolbarPaneCircleVbox.setVisible(false);
+					toolbarPaneRectangleVbox.setVisible(false);
+					toolbarPaneLineVbox.setVisible(true);
+//					rectangleHeightInput.setVisible(false);
+//					rectangleWidthInput.setVisible(false);
+//					circleRadiusSlider.setVisible(false);
+////					submitInfo.setVisible(false);
+//					rectangleColorPicker.setVisible(false);
+//					circleRadiusSlider.setVisible(false);
+
+				}
+				// TODO Auto-generated method stub
+
+			}
+
+		};
+		
+		shapeOptionsMenu.setOnAction(shapeOptionsMenuChange);		
 		
 		mainStage.setScene(scene);
 		mainStage.show();
