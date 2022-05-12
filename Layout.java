@@ -47,6 +47,8 @@ public class Layout extends Application{
 	Color rectangleColor = Color.WHITE;
 	boolean rectangleColorSet = false;
 	
+//	double 
+	
 	public static void main(String[] args) {
 		Application.launch(args);
 	}
@@ -64,22 +66,36 @@ public class Layout extends Application{
 		// TOOLBAR PANE ADD PRE-SET CONTROLS HERE		
 		Pane toolbarPane = new Pane();
 		VBox toolbarPaneVBox = new VBox();
+		HBox toolbarPaneHbox2 = new HBox();
 		// SHAPE OPTIONS MENU		
 		ComboBox<String> shapeOptionsMenu = new ComboBox<String>(); 
 		shapeOptionsMenu.getItems().addAll("circle", "rectangle", "line"); 
 		shapeOptionsMenu.setPrefWidth(200); 
 		shapeOptionsMenu.setPrefWidth(200); 
 
-//		shapeOptionsMenu.setOnAction((event) -> {
-//		    int selectedIndex = shapeOptionsMenu.getSelectionModel().getSelectedIndex();
-//		    Object selectedItem = shapeOptionsMenu.getSelectionModel().getSelectedItem();
-//
-//		    shapeType = shapeOptionsMenu.getValue();
-//		    shapeTypeSet = true;
-//		});
-        
+		toolbarPaneHbox2.getChildren().add(shapeOptionsMenu);
+			
+		
+		// UNDO BUTTON
+		Button undoButton = new Button("UNDO");
+		
+		EventHandler<ActionEvent>undoButtonAction = new EventHandler <ActionEvent>() {
 
-		toolbarPaneVBox.getChildren().add(shapeOptionsMenu);		
+			@Override
+			public void handle(ActionEvent arg0) {
+				if(root.getChildren().size() != 1) {
+					root.getChildren().remove(root.getChildren().size() - 1);	
+				}
+				
+//				System.out.print(arg0.get)
+			}
+		};
+		
+		undoButton.setOnAction(undoButtonAction);
+        	
+		toolbarPaneHbox2.getChildren().add(undoButton);	
+		
+		toolbarPaneVBox.getChildren().add(toolbarPaneHbox2);
 		
 		HBox toolbarPaneHbox = new HBox();
 			
@@ -96,22 +112,6 @@ public class Layout extends Application{
 		toolbarPaneHbox.getChildren().add(toolbarPaneLineVbox);
 		toolbarPaneLineVbox.setVisible(false);
 		
-		// UNDO BUTTON
-		Button undoButton = new Button("UNDO");
-		
-		EventHandler<ActionEvent>undoButtonAction = new EventHandler <ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				System.out.println(root.getChildren().size() - 1);
-				root.getChildren().remove(root.getChildren().size() - 1);
-//				System.out.print(arg0.get)
-			}
-		};
-		
-		undoButton.setOnAction(undoButtonAction);
-        	
-        toolbarPaneLineVbox.getChildren().add(undoButton);
 		
 		// SET TOOLBAR STYLES AND POSITIONING		
 		toolbarPane.setPrefWidth(1000);
@@ -182,8 +182,28 @@ public class Layout extends Application{
         };
   
         rectangleHeightInput.setOnAction(rectangleHeightInputChange);	
-        toolbarPaneRectangleVbox.getChildren().add(rectangleHeightInput);        
+        toolbarPaneRectangleVbox.getChildren().add(rectangleHeightInput);
+        Button submitRectangleDimensions = new Button("Set Dimenstions");
 		
+		EventHandler<ActionEvent>rectangleDimensionSubmit = new EventHandler <ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				if(rectangleHeightInput.getText() != "" && rectangleWidthInput.getText() != "") {
+	            	rectangleHeight = Double.parseDouble(rectangleHeightInput.getText());
+	            	rectangleHeightSet = true;
+	            	rectangleWidth = Double.parseDouble(rectangleWidthInput.getText());
+	            	rectangleWidthSet = true;
+				}
+				
+//				System.out.print(arg0.get)
+			}
+		};
+		
+		submitRectangleDimensions.setOnAction(rectangleDimensionSubmit);        
+        
+        toolbarPaneRectangleVbox.getChildren().add(submitRectangleDimensions);
+        
 		// RECTANGLE COLOR PICKER
 		ColorPicker rectangleColorPicker = new ColorPicker(); 
 		EventHandler<ActionEvent>RectangleColorChange = new EventHandler <ActionEvent>() {
@@ -258,7 +278,7 @@ public class Layout extends Application{
 //					circleRadiusSlider.setVisible(true);
 ////					submitInfo.setVisible(false);
 //					colorPicker.setVisible(true);
-					rectangleColorPicker.setVisible(false);
+//					rectangleColorPicker.setVisible(false);
 				} else if (shapeOptionsMenu.getValue() == "rectangle") {
 					shapeType = "rectangle";
 					shapeTypeSet = true;
