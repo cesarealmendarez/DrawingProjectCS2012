@@ -29,11 +29,53 @@ public class Layout extends Application{
 	
 	@Override
 	public void start(Stage mainStage) throws Exception {
-		StackPane root = new StackPane();
-		Scene scene = new Scene(root, 1000, 1000);
+		Group root = new Group();
+		Scene scene = new Scene(root, 600, 600);
+			
+		scene.setOnMouseClicked(event -> {
+			Circle newCircle = new Circle(event.getX(), event.getY(), 15);
+			root.getChildren().add(newCircle);
+		});
 		
 		mainStage.setScene(scene);
 		mainStage.show();
+		 
+//		StackPane root = new StackPane();
+//		Scene scene = new Scene(root, 1000, 1000);
+		
+//		HBox box = new HBox(); 
+//		box.setStyle("-fx-background-color: gray"); 
+//		box.setPrefWidth(2000); 
+//		box.setMaxWidth(2000); 
+//		box.setPrefHeight(200); 
+//		box.setMaxHeight(200); 
+//		box.setTranslateY(-400); 
+//		root.getChildren().add(box);
+		
+//		HBox box2 = new HBox(); 
+//		box2.setStyle("-fx-background-color: red"); 
+//		box2.setPrefWidth(2000); 
+//		box2.setMaxWidth(2000); 
+//		box2.setPrefHeight(2000); 
+//		box2.setMaxHeight(2000); 
+//		box2.setTranslateY(100);
+//		 	
+//		Group group = new Group();
+//		box2.setOnMouseClicked((click) -> { 
+//			// GET X AND Y COORDINATES 	
+//			double xPosition = click.getX();
+//			double yPositon = click.getY();
+//			// CREATE AND ADD CIRCLE TO HBOX box2
+//			Circle newCircle = new Circle(xPosition, yPositon, 15);
+//		});
+//		
+//		box2.getChildren().add(group);
+//		root.getChildren().add(box2);
+		
+		
+		
+//		mainStage.setScene(scene);
+//		mainStage.show();
 	}
 	
 }
