@@ -93,7 +93,22 @@ public class Layout extends Application{
 		toolbarPaneHbox.getChildren().add(toolbarPaneRectangleVbox);
 		toolbarPaneHbox.getChildren().add(toolbarPaneLineVbox);
 		
+		// UNDO BUTTON
+		Button undoButton = new Button("UNDO");
 		
+		EventHandler<ActionEvent>undoButtonAction = new EventHandler <ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				System.out.println(root.getChildren());
+//				group.getChildren().remove(group.getChildren().size() - 2);
+//				System.out.print(arg0.get)
+			}
+		};
+		
+		undoButton.setOnAction(undoButtonAction);
+        	
+        toolbarPaneLineVbox.getChildren().add(undoButton);
 		
 		// SET TOOLBAR STYLES AND POSITIONING		
 		toolbarPane.setPrefWidth(1000);
@@ -190,40 +205,38 @@ public class Layout extends Application{
 			
 		// HANDLE SCENE CLICK		
 		scene.setOnMouseClicked(event -> {
-			// CHECK IF SHAPE TYPE IS SET			
-			if(shapeTypeSet == true) {	
-				if(shapeType == "circle") {
-					if(circleRadiusSet == true && circleColorSet == true) {
-						// DRAW CIRCLE WITH ENTERED PRESETS	
-						Circle newCircle = new Circle(event.getX(), event.getY(), circleRadius);
-						newCircle.setFill(circleColor);
-						root.getChildren().add(newCircle);
-						
-					}else {
-						dialog.setContentText("Please enter a radius and color for your circle");
-						dialog.showAndWait();
+			// CHECK IF MOUSE CLICK POSITION IS NOT ON TOOLBAR
+			if(event.getY() >= 125) {
+				// CHECK IF SHAPE TYPE IS SET			
+				if(shapeTypeSet == true) {	
+					if(shapeType == "circle") {
+						if(circleRadiusSet == true && circleColorSet == true) {
+							// DRAW CIRCLE WITH ENTERED PRESETS	
+							Circle newCircle = new Circle(event.getX(), event.getY(), circleRadius);
+							newCircle.setFill(circleColor);
+							root.getChildren().add(newCircle);
+							
+						}else {
+							dialog.setContentText("Please enter a radius and color for your circle");
+							dialog.showAndWait();
+						}
+					}else if(shapeType == "rectangle") {				
+						// CHECK IF COLOR, WIDTH, AND HEIGHT IS SET  
+						if(rectangleWidthSet == true && rectangleHeightSet == true && rectangleColorSet == true) {
+							Rectangle rectangle = new Rectangle(event.getX(), event.getY(), rectangleWidth, rectangleHeight);
+							rectangle.setFill(rectangleColor);
+							root.getChildren().add(rectangle);
+						}else {
+							dialog.setContentText("Please enter a width, height, and color for your rectangle");
+							dialog.showAndWait();
+						}					
+					}else if(shapeType == "line") {
+						// CHECK IF COLOR, AND STROKE SIZE IS SET 					
 					}
-				}else if(shapeType == "rectangle") {				
-					// CHECK IF COLOR, WIDTH, AND HEIGHT IS SET  
-//					System.out.println("Width " + rectangleWidthSet + " Height " + rectangleHeightSet + " Color " + rectangleColorSet);
-					if(rectangleWidthSet == true && rectangleHeightSet == true && rectangleColorSet == true) {
-//						System.out.println("Width " + rectangleWidth + " Height " + rectangleHeight + " Color " + rectangleColor);
-						Rectangle rectangle = new Rectangle(event.getX(), event.getY(), rectangleWidth, rectangleHeight);
-						// DRAW CIRCLE WITH ENTERED PRESETS	
-//						Circle newCircle = new Circle(event.getX(), event.getY(), circleRadius);
-						rectangle.setFill(rectangleColor);
-						root.getChildren().add(rectangle);
-						
-					}else {
-						dialog.setContentText("Please enter a width, height, and color for your rectangle");
-						dialog.showAndWait();
-					}					
-				}else if(shapeType == "line") {
-					// CHECK IF COLOR, AND STROKE SIZE IS SET 					
+				}else {
+					dialog.setContentText("Please Select A Shape Type");
+					dialog.showAndWait();
 				}
-			}else {
-				dialog.setContentText("Please Select A Shape Type");
-				dialog.showAndWait();
 			}
 		});
 		
