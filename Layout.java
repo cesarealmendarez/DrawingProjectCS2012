@@ -23,7 +23,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle; 
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font; 
 import javafx.scene.text.FontPosture; 
 import javafx.scene.text.FontWeight; 
@@ -33,10 +34,18 @@ public class Layout extends Application{
 		
 	String shapeType = "";
 	boolean shapeTypeSet = false;
+	
 	double circleRadius = 0.0;
 	boolean circleRadiusSet = false;
 	Color circleColor = Color.WHITE;
 	boolean circleColorSet = false;
+	
+	double rectangleWidth = 0.0;
+	boolean rectangleWidthSet = false;
+	double rectangleHeight = 0.0;
+	boolean rectangleHeightSet = false;
+	Color rectangleColor = Color.WHITE;
+	boolean rectangleColorSet = false;
 	
 	public static void main(String[] args) {
 		Application.launch(args);
@@ -55,15 +64,6 @@ public class Layout extends Application{
 		// TOOLBAR PANE ADD PRE-SET CONTROLS HERE		
 		Pane toolbarPane = new Pane();
 		VBox toolbarPaneVBox = new VBox();
-		
-		// SET TOOLBAR STYLES AND POSITIONING		
-		toolbarPane.setPrefWidth(1000);
-		toolbarPane.setPrefHeight(100);
-		toolbarPane.setStyle("-fx-background-color: red");
-		toolbarPane.getChildren().add(toolbarPaneVBox);
-		
-		// INITIALIZE AND ADD CONTROLS TO TOOLBAR PANE
-		
 		// SHAPE OPTIONS MENU		
 		ComboBox<String> shapeOptionsMenu = new ComboBox<String>(); 
 		shapeOptionsMenu.getItems().addAll("circle", "rectangle", "line"); 
@@ -79,8 +79,30 @@ public class Layout extends Application{
 		});
         
 
-	
-		toolbarPaneVBox.getChildren().add(shapeOptionsMenu);
+		toolbarPaneVBox.getChildren().add(shapeOptionsMenu);		
+		
+		HBox toolbarPaneHbox = new HBox();
+			
+		toolbarPaneVBox.getChildren().add(toolbarPaneHbox);
+		
+		VBox toolbarPaneCircleVbox = new VBox();
+		VBox toolbarPaneRectangleVbox = new VBox();
+		VBox toolbarPaneLineVbox = new VBox();
+		
+		toolbarPaneHbox.getChildren().add(toolbarPaneCircleVbox);
+		toolbarPaneHbox.getChildren().add(toolbarPaneRectangleVbox);
+		toolbarPaneHbox.getChildren().add(toolbarPaneLineVbox);
+		
+		
+		
+		// SET TOOLBAR STYLES AND POSITIONING		
+		toolbarPane.setPrefWidth(1000);
+		toolbarPane.setPrefHeight(100);
+		toolbarPane.setStyle("-fx-background-color: red");
+		toolbarPane.getChildren().add(toolbarPaneVBox);
+		
+		// INITIALIZE AND ADD CONTROLS TO TOOLBAR PANE
+		
 		
 		// CIRCLE RADIUS SLIDER
 		Slider circleRadiusSlider = new Slider(1, 50, 1); 
@@ -98,7 +120,7 @@ public class Layout extends Application{
 			
     	});
                   
-		toolbarPaneVBox.getChildren().add(circleRadiusSlider);
+		toolbarPaneCircleVbox.getChildren().add(circleRadiusSlider);
 		
 		// CIRCLE COLOR PICKER
 		ColorPicker colorPicker = new ColorPicker(); 
@@ -114,7 +136,51 @@ public class Layout extends Application{
 		
 		colorPicker.setOnAction(ColorChange);
 		
-		toolbarPaneVBox.getChildren().add(colorPicker);
+		toolbarPaneCircleVbox.getChildren().add(colorPicker);
+		
+		// RECTANGLE PRESETS
+			
+		// RECTANGLE WIDTH INPUT
+		TextField rectangleWidthInput = new TextField("");
+		
+        EventHandler<ActionEvent> rectangleWidthInputChange = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e){
+            	rectangleWidth = Double.parseDouble(rectangleWidthInput.getText());
+            	rectangleWidthSet = true;
+            }
+        };
+  
+        rectangleWidthInput.setOnAction(rectangleWidthInputChange);	
+        toolbarPaneRectangleVbox.getChildren().add(rectangleWidthInput);
+		
+		// RECTANGLE HEIGHT INPUT
+		TextField rectangleHeightInput = new TextField("");
+		
+        EventHandler<ActionEvent> rectangleHeightInputChange = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e){
+            	rectangleHeight = Double.parseDouble(rectangleHeightInput.getText());
+            	rectangleHeightSet = true;
+            }
+        };
+  
+        rectangleHeightInput.setOnAction(rectangleHeightInputChange);	
+        toolbarPaneRectangleVbox.getChildren().add(rectangleHeightInput);        
+		
+		// RECTANGLE COLOR PICKER
+		ColorPicker rectangleColorPicker = new ColorPicker(); 
+		EventHandler<ActionEvent>RectangleColorChange = new EventHandler <ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				Color c = rectangleColorPicker.getValue();
+				rectangleColor = c;
+				rectangleColorSet = true;
+			}
+		};		
+		
+		rectangleColorPicker.setOnAction(RectangleColorChange);
+		
+		toolbarPaneRectangleVbox.getChildren().add(rectangleColorPicker);		
 		
 		// ADD TOOLBAR TO ROOT		
 		root.getChildren().add(toolbarPane);
@@ -138,7 +204,20 @@ public class Layout extends Application{
 						dialog.showAndWait();
 					}
 				}else if(shapeType == "rectangle") {				
-					// CHECK IF COLOR, WIDTH, AND HEIGHT IS SET  					
+					// CHECK IF COLOR, WIDTH, AND HEIGHT IS SET  
+//					System.out.println("Width " + rectangleWidthSet + " Height " + rectangleHeightSet + " Color " + rectangleColorSet);
+					if(rectangleWidthSet == true && rectangleHeightSet == true && rectangleColorSet == true) {
+//						System.out.println("Width " + rectangleWidth + " Height " + rectangleHeight + " Color " + rectangleColor);
+						Rectangle rectangle = new Rectangle(event.getX(), event.getY(), rectangleWidth, rectangleHeight);
+						// DRAW CIRCLE WITH ENTERED PRESETS	
+//						Circle newCircle = new Circle(event.getX(), event.getY(), circleRadius);
+						rectangle.setFill(rectangleColor);
+						root.getChildren().add(rectangle);
+						
+					}else {
+						dialog.setContentText("Please enter a width, height, and color for your rectangle");
+						dialog.showAndWait();
+					}					
 				}else if(shapeType == "line") {
 					// CHECK IF COLOR, AND STROKE SIZE IS SET 					
 				}
@@ -146,62 +225,11 @@ public class Layout extends Application{
 				dialog.setContentText("Please Select A Shape Type");
 				dialog.showAndWait();
 			}
-//			double clickedPositionX = event.getX();
-//			double clickedPositionY = event.getY();
-//			
-//			if(!(clickedPositionY <= 115)) {
-//				Circle newCircle = new Circle(event.getX(), event.getY(), 15);
-//				root.getChildren().add(newCircle);
-//			}
 		});
 		
 		mainStage.setScene(scene);
 		mainStage.show();
 		 
-//		StackPane root = new StackPane();
-//		Scene scene = new Scene(root, 1000, 1000);
-//		
-//		Group groupRoot = new Group();
-//		Scene sceneBottom = new Scene(groupRoot, 600, 600);
-//			
-//		sceneBottom.setOnMouseClicked(event -> {
-//			Circle newCircle = new Circle(event.getX(), event.getY(), 15);
-//			groupRoot.getChildren().add(newCircle);
-//		});
-//		
-//		HBox box = new HBox(); 
-//		box.setStyle("-fx-background-color: gray"); 
-//		box.setPrefWidth(2000); 
-//		box.setMaxWidth(2000); 
-//		box.setPrefHeight(200); 
-//		box.setMaxHeight(200); 
-//		box.setTranslateY(-400); 
-//		root.getChildren().add(box);
-//		
-//		HBox box2 = new HBox(); 
-//		box2.setStyle("-fx-background-color: red"); 
-//		box2.setPrefWidth(2000); 
-//		box2.setMaxWidth(2000); 
-//		box2.setPrefHeight(2000); 
-//		box2.setMaxHeight(2000); 
-//		box2.setTranslateY(100);
-//		 	
-//		Group group = new Group();
-//		box2.setOnMouseClicked((click) -> { 
-//			// GET X AND Y COORDINATES 	
-//			double xPosition = click.getX();
-//			double yPositon = click.getY();
-//			// CREATE AND ADD CIRCLE TO HBOX box2
-//			Circle newCircle = new Circle(xPosition, yPositon, 15);
-//		});
-//		
-//		box2.getChildren().add(sceneBottom);
-//		root.getChildren().add(box2);
-//		
-//		
-//		
-//		mainStage.setScene(scene);
-//		mainStage.show();
 	}
 	
 }
